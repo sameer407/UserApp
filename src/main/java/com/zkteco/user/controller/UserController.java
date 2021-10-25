@@ -41,22 +41,27 @@ import io.swagger.annotations.Api;
 
 public class UserController {
 	@Autowired
+	
 	private UserService userService;
 
 	@GetMapping
-	public ResultDTO findPaginated(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size)throws UserNotFoundException {
-	ResultDTO res = userService.getAllUser( page, size);
+	public ResultDTO findPaginated(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size)
+			//throws UserNotFoundException 
+	{
+	ResultDTO res = userService.getAllUser(page, size);
 	return res;
 	}
 
 	@GetMapping("/{id}")
-	public ResultDTO fetchUserById(@PathVariable("id")  String userId) throws UserNotFoundException {
+	public ResultDTO fetchUserById(@PathVariable("id")  String userId)throws UserNotFoundException 
+	{
 		return userService.fetchUserById(userId);
 	}
 
 	@PostMapping
 	//@RequestMapping(value = "/test", method = RequestMethod.POST)
-	public ResultDTO saveUser( @Validated @RequestBody UserDTO dto) throws UserNotFoundException {
+	public ResultDTO saveUser( @Validated @RequestBody UserDTO dto) throws UserNotFoundException 
+	{
 		return userService.saveUser(dto);
 	}
 
@@ -70,5 +75,7 @@ public class UserController {
 	public ResultDTO deleteUserById(@RequestParam("id") String userId) throws UserNotFoundException {
 		return userService.deleteUserById(userId);
 	}
+// using global exception
 
+	
 }

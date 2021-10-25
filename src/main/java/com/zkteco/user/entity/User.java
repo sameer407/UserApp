@@ -1,7 +1,5 @@
 package com.zkteco.user.entity;
 
-
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -36,35 +34,33 @@ public class User {
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	@Column(name = "ID", length = 50, nullable = false)
 	private String userId;
-	
+
 	@Column(name = "first_name")
 	private String firstName;
-	
-	@Column(name= "last_name")
+
+	@Column(name = "last_name")
 	private String lastName;
-	
-	@Column(name="Address")
+
+	@Column(name = "Address")
 	private String address;
-	
-	@Column(name="email_ID")
+
+	@Column(name = "email_ID")
 	private String email_Id;
-	
-	@Column(name="UserCode")
+
+	@Column(name = "UserCode")
 	private String userCode;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdate;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedate;
-	
+
 	private String gender;
 
 	public boolean isPresent() {
 
 		return true;
 	}
-
-
 
 }

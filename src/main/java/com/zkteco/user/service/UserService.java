@@ -11,12 +11,8 @@ import com.zkteco.user.dto.UserDTO;
 import com.zkteco.user.entity.User;
 import com.zkteco.user.exception.UserNotFoundException;
 
-//import com.dailycodebuffer.Springboottutorial.controller.entity.Department;
-
 public interface UserService {
 	//public ResultDTO saveUser(User user);
-
-	
 
 	//public List<User> fetchUserList();
 	public ResultDTO fetchUserById(String userId) throws UserNotFoundException ;
@@ -32,14 +28,8 @@ public interface UserService {
 
 	ResultDTO updateUser(String userId, UserDTO user) throws UserNotFoundException;
 
-
-
 	ResultDTO saveUser(UserDTO dto) throws UserNotFoundException;
 
-
-
 	public ResultDTO getAllUser(int page, int size);
-
-
 	
 }

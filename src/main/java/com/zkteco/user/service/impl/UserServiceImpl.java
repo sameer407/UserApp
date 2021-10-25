@@ -29,7 +29,7 @@ import com.zkteco.user.repository.UserRepository;
 import com.zkteco.user.service.UserService;
 
 @Service
-public  class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
@@ -69,41 +69,33 @@ public  class UserServiceImpl implements UserService {
 		return dto.stream().map(x -> dtoToEntity(x)).collect(Collectors.toList());
 	}
 //to save operation
-	
-	
-	
+
 	@Override
-	public ResultDTO saveUser(UserDTO dto) throws UserNotFoundException
-	{	
-		int size=dto.getFirstName().length();
-		if(dto.getFirstName().isEmpty()&&dto.getEmail_Id().isEmpty())
-		{
+	public ResultDTO saveUser(UserDTO dto) throws UserNotFoundException {
+		int size = dto.getFirstName().length();
+		if (dto.getFirstName().isEmpty() && dto.getEmail_Id().isEmpty()) {
 			ResultDTO result = new ResultDTO();
 			result.setCode("User-01");
 			result.setMessage("first name and address must not be empty");
 			return result;
-		}
-		else if(dto.getFirstName().isEmpty())
-		{
-		ResultDTO result = new ResultDTO();
-		result.setCode("User-01");
-		result.setMessage("first name must not be null");
-		return result;
-		}else if(dto.getEmail_Id().isEmpty())
-		{
-		ResultDTO result = new ResultDTO();
-		result.setCode("User-01");
-		result.setMessage("Email should not be null");
-		return result;
-		}else if(size<3)
-		{
+		} else if (dto.getFirstName().isEmpty()) {
+			ResultDTO result = new ResultDTO();
+			result.setCode("User-01");
+			result.setMessage("first name must not be null");
+			return result;
+		} else if (dto.getEmail_Id().isEmpty()) {
+			ResultDTO result = new ResultDTO();
+			result.setCode("User-01");
+			result.setMessage("Email should not be null");
+			return result;
+		} else if (size < 3) {
 			ResultDTO result = new ResultDTO();
 			result.setCode("User-01");
 			result.setMessage("usert Name must be min 3 characters max 10 characters");
 			return result;
-			
+
 		}
-		
+
 		User user = userService.dtoToEntity(dto);
 		user.setCreatedate(new Date());
 		user = userRepository.save(user);
@@ -114,40 +106,51 @@ public  class UserServiceImpl implements UserService {
 		result.setData(usrdto);
 		return result;
 	}
-	
+
 //To retrive by ID
 	@Override
 	public ResultDTO fetchUserById(String userId) throws UserNotFoundException {
-		
-		Optional<User>  orElse= userRepository.findById(userId);
-		if (!orElse.isPresent()) { 
-			throw new UserNotFoundException("User Not Available"); 
-			}
-		User user=orElse.get();
 
+		Optional<User> orElse = userRepository.findById(userId);
+		if (!orElse.isPresent()) {
+			ResultDTO result = new ResultDTO();
+			result.setCode("User-01");
+			result.setMessage("User Details nt found");
+			result.setData(orElse);
+		return result;
+
+			// throw new UserNotFoundException("User Not Available");
+		}
+		else{
+		User user = orElse.get();
 		UserDTO dto = userService.entityToDto(user);
 		ResultDTO result = new ResultDTO();
 		result.setCode("User-01");
 		result.setMessage("User Details found");
-		result.setData(user);
+		//result.setData(user);
 
-
-
-	return result;
-	}
+		return result;
+	}}
 
 //  to Update by ID
 	@Override
-	public ResultDTO updateUser(String userId, UserDTO user)throws UserNotFoundException {
-		
+	public ResultDTO updateUser(String userId, UserDTO user) throws UserNotFoundException {
+
 		Optional<User> usr = userRepository.findById(userId);
-		if (!usr.isPresent()) { 
-			throw new UserNotFoundException("User Not Available"); 
-			}
+		if (!usr.isPresent()) {
+			//throw new UserNotFoundException("User Not Available");
+			ResultDTO result = new ResultDTO();
+			result.setCode("User-01");
+			result.setMessage("User Details nt found");
+			result.setData(usr);
+		return result;
+
+			// throw new UserNotFoundException("User Not Available");
 		
+		}
+
 		User useDB = usr.get();
-		
-		
+
 		if (Objects.nonNull(user.getUserId()) && !"".equals(user.getUserId())) {
 			useDB.setUserId(user.getUserId());
 		}
@@ -184,79 +187,72 @@ public  class UserServiceImpl implements UserService {
 		return result;
 
 	}
+
 //Delete BY Id
 	@Override
 	public ResultDTO deleteUserById(String userId) throws UserNotFoundException {
-		//85,63,52,44
-		
-		String[] ids=null;
-			ids=userId.split(",");
-			
+		// 85,63,52,44
 
-		int successCount=0;
-		int errorCount=0;
+		String[] ids = null;
+		ids = userId.split(",");
+
+		int successCount = 0;
+		int errorCount = 0;
 		ResultDTO resdto = new ResultDTO();
-		SuccessCount count=new SuccessCount();
+		SuccessCount count = new SuccessCount();
 		ErrorCount count1 = new ErrorCount();
-		List<ErrorCount> lst2=new ArrayList<ErrorCount>();
-		ArrayList<String> a=new ArrayList<String>();
-		List<ResultDTO> resdto2=new ArrayList<ResultDTO>();
-		
-		for(String id:ids)
-		{
-			if (userRepository.existsById(id)) 
-			{ 
+		List<ErrorCount> lst2 = new ArrayList<ErrorCount>();
+		ArrayList<String> a = new ArrayList<String>();
+		List<ResultDTO> resdto2 = new ArrayList<ResultDTO>();
+
+		for (String id : ids) {
+			if (userRepository.existsById(id)) {
 				userRepository.deleteById(id);
 				a.add(id);
 				successCount++;
 				count.setSuccessCount(String.valueOf(successCount));
 				count.setSuccess(a);
-				List<SuccessCount> lst1=new ArrayList<SuccessCount>();
+			
+			List<SuccessCount> lst1 = new ArrayList<SuccessCount>();
 				lst1.add(count);
-				
-			}
-			else {
+			} else {
 				errorCount++;
 				count1.setErrorCount(String.valueOf(errorCount));
 				ResultDTO resdto1 = new ResultDTO();
 				resdto1.setCode("user002");
-				resdto1.setMessage("id not exist ");
+				resdto1.setMessage("User id nt found");
 				resdto1.setData(id);
 				resdto2.add(resdto1);
 				count1.setFailure(resdto2);
 				count1.setFailure(resdto2);
 			}
 		}
-		List<Object> obj=new ArrayList<Object>();
+		List<Object> obj = new ArrayList<Object>();
 		obj.add(count);
 		obj.add(count1);
 		resdto.setCode("User003");
 		resdto.setMessage("One or More Objects are Not Processed");
 		resdto.setData(obj);
 		return resdto;
-		
-		
-		
+
 	}
+
 //list and Filter
-	public  ResultDTO getAllUser(int page, int size) {
-	Pageable page1 = PageRequest.of(page, size);
-	Page<User> page2 = userRepository.findAll(page1);
-	List<User> user = new ArrayList<User>();
-	for(User d:page2)
+	public ResultDTO getAllUser(int page, int size) 
 	{
-	user.add(d);
+		Pageable page1 = PageRequest.of(page, size);
+		Page<User> page2 = userRepository.findAll(page1);
+		List<User> user = new ArrayList<User>();
+		for (User d : page2) {
+			user.add(d);
+		}
+		ResultDTO res = new ResultDTO();
+		res.setCode("dept001");
+		res.setMessage("succesfully fetched");
+		res.setData(user);
+		return res;
 	}
-	ResultDTO res = new ResultDTO();
-	res.setCode("dept001");
-	res.setMessage("succesfully fetched");
-	res.setData(user);
-	return res;
-	}
 
-
-
-
-
+//fetch user by id using global exception
 
 }

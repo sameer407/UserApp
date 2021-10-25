@@ -18,4 +18,5 @@ public class ResultDTO {
 	//private String email_Id;
 	//private String userCode;
 	//private String gender;
+
 }

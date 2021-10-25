@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class ErrorCount {
 private String errorCount;
 private Object failure;
+private String timestamp;
 }
